@@ -1,6 +1,3 @@
-# 📚 Framework for Quality Assurance in Educational apps
-
----
 
 ## 🎯 Features
 
@@ -439,3 +436,6 @@ Built with:
 **Happy Analyzing! 📚🚀**
 
 *Made with ❤️ for educators and researchers*
+=======
+# Framework
+>>>>>>> bd508c541d5a6b3feb9bfd49c936c9a7eac5faa6
