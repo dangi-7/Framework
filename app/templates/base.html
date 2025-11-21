@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title or "EduGradeAI" }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    {% block head_extra %}{% endblock %}
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <div class="container">
+          <div class="branding">
+            <a href="/" class="logo">EduGradeAI</a>
+            <p class="tagline">Quality intelligence for learning apps</p>
+          </div>
+          <nav class="nav">
+            <a href="/" class="nav-link {% if request.url.path == '/' %}active{% endif %}">Home</a>
+            <a href="/evaluate" class="nav-link {% if request.url.path.startswith('/evaluate') %}active{% endif %}">Evaluate</a>
+            <a href="/reports" class="nav-link {% if request.url.path.startswith('/reports') %}active{% endif %}">Reports</a>
+            <a href="/framework" class="nav-link {% if request.url.path.startswith('/framework') %}active{% endif %}">Framework Lab</a>
+          </nav>
+        </div>
+      </header>
+      <main class="app-main">
+        {% block content %}{% endblock %}
+      </main>
+      <footer class="app-footer">
+        <div class="container footer-grid">
+          <div>
+            <p class="footer-title">EduGradeAI</p>
+            <p class="muted">A research-backed framework for quality assurance in educational app design.</p>
+          </div>
+          <div>
+            <p class="footer-title">Project Scope</p>
+            <ul>
+              <li>Pedagogical validation</li>
+              <li>Technical reliability</li>
+              <li>Usability excellence</li>
+              <li>Evidence-based improvements</li>
+            </ul>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" integrity="sha384-mhK8BPVKx/aRXefxWWEXUOYaL6VLdystD5nq2WEYLRh1SeDsICoZ6irMIXja+6wM" crossorigin="anonymous"></script>
+    <script src="/static/js/app.js"></script>
+    {% block body_extra %}{% endblock %}
+  </body>
+</html>

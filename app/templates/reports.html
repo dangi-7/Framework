@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Evidence library</p>
+      <h1>All evaluation reports</h1>
+      <p class="lead">Compare multiple apps or track the same product over time. Sort by highest quality score to spot exemplars quickly.</p>
+    </div>
+    <a class="btn ghost" href="/evaluate">Add new evaluation</a>
+  </div>
+
+  <div class="grid-3">
+    {% if evaluations %}
+      {% for evaluation in evaluations %}
+        <article class="card hover">
+          <div class="score-chip">{{ '%.1f' | format(evaluation.quality_score) }}%</div>
+          <h3>{{ evaluation.app_name }}</h3>
+          <p class="muted">{{ evaluation.audience or "General audience" }}</p>
+          <p>{{ evaluation.summary or "No summary provided" }}</p>
+          <dl class="score-grid">
+            <div>
+              <dt>Pedagogy</dt>
+              <dd>{{ evaluation.pedagogical_design }}/5</dd>
+            </div>
+            <div>
+              <dt>UI/UX</dt>
+              <dd>{{ evaluation.ui_ux }}/5</dd>
+            </div>
+            <div>
+              <dt>Engagement</dt>
+              <dd>{{ evaluation.engagement }}/5</dd>
+            </div>
+            <div>
+              <dt>Technical</dt>
+              <dd>{{ evaluation.technical_performance }}/5</dd>
+            </div>
+            <div>
+              <dt>Learning</dt>
+              <dd>{{ evaluation.learning_effectiveness }}/5</dd>
+            </div>
+          </dl>
+          <a href="/reports/{{ evaluation.id }}" class="btn secondary">Open report</a>
+        </article>
+      {% endfor %}
+    {% else %}
+      <article class="card">
+        <p>No evaluations captured yet. Use the “Add new evaluation” button to create the first record.</p>
+      </article>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

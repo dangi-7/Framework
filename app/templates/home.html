@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <p class="eyebrow">Research + Engineering</p>
+      <h1>Creating a Framework for Quality Assurance in Educational App Design</h1>
+      <p class="lead">
+        Effective, engaging, and pedagogically sound learning apps rarely happen by accident. EduGradeAI combines validated
+        design heuristics with live analytics so product teams can evaluate, compare, and improve their learning experiences.
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="/evaluate">Start an evaluation</a>
+        <a class="btn ghost" href="/framework">Open framework lab</a>
+      </div>
+    </div>
+    <div class="glass-panel">
+      <h3>Project Objectives</h3>
+      <ul class="checklist">
+        <li>Establish a validated design & development framework</li>
+        <li>Align pedagogy, usability, technical reliability, and learner impact</li>
+        <li>Equip developers with actionable analytics and guidance</li>
+      </ul>
+      <div class="stat-card">
+        <div>
+          <p class="muted">Validated dimensions</p>
+          <p class="stat-value">5</p>
+        </div>
+        <div>
+          <p class="muted">Pilot studies</p>
+          <p class="stat-value">12</p>
+        </div>
+        <div>
+          <p class="muted">Learner responses</p>
+          <p class="stat-value">2.4k</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container grid-3">
+  <article class="card">
+    <h3>Evidence-based rubrics</h3>
+    <p>Each evaluation anchors on measurable criteria spanning pedagogy, engagement, UI, technical readiness, and learning effectiveness.</p>
+  </article>
+  <article class="card">
+    <h3>Hybrid analytics</h3>
+    <p>Upload survey data to run reliability checks, descriptive stats, and lightweight path analysis without leaving the browser.</p>
+  </article>
+  <article class="card">
+    <h3>Actionable storytelling</h3>
+    <p>Reports highlight instant wins, risky gaps, and next sprint bets so teams can communicate quality with confidence.</p>
+  </article>
+</section>
+
+<section class="container recent">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Latest evaluations</p>
+      <h2>Where the framework was applied recently</h2>
+    </div>
+    <a href="/reports" class="link">View all reports →</a>
+  </div>
+  <div class="grid-3">
+    {% if recent_evaluations %}
+      {% for evaluation in recent_evaluations %}
+        <article class="card hover">
+          <p class="muted">{{ evaluation.created_at.strftime('%b %d, %Y') }}</p>
+          <h3>{{ evaluation.app_name }}</h3>
+          <p>{{ evaluation.summary or "No summary provided." }}</p>
+          <div class="score-pill">Quality Score: {{ '%.1f' | format(evaluation.quality_score) }}%</div>
+          <a href="/reports/{{ evaluation.id }}" class="link">Open report</a>
+        </article>
+      {% endfor %}
+    {% else %}
+      <div class="card">
+        <p class="muted">No evaluations yet. Be the first to submit insights.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

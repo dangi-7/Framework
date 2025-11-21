@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container form-page">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Step 1</p>
+      <h1>Evaluate your educational experience</h1>
+      <p class="lead">Input qualitative context and rate each dimension from 1 (critical) to 5 (exceptional). We will auto-generate insights and a report.</p>
+    </div>
+    <div class="glass-panel mini">
+      <p class="muted">Evaluation rubric</p>
+      <ul class="checklist compact">
+        <li>Pedagogical design</li>
+        <li>UI & usability</li>
+        <li>Learner engagement</li>
+        <li>Technical reliability</li>
+        <li>Learning effectiveness</li>
+      </ul>
+    </div>
+  </div>
+
+  <form class="card form" method="post" action="/evaluate">
+    <div class="form-grid">
+      <label>
+        <span>App name *</span>
+        <input type="text" name="app_name" required placeholder="e.g. LearnFlow" />
+      </label>
+      <label>
+        <span>Primary audience</span>
+        <input type="text" name="audience" placeholder="Higher-ed learners, K12 teachers…" />
+      </label>
+    </div>
+    <label>
+      <span>Context / summary</span>
+      <textarea name="summary" rows="3" placeholder="What are you testing or validating?"></textarea>
+    </label>
+
+    <div class="ratings">
+      {% set metrics = [
+        ("pedagogical_design", "Pedagogical design"),
+        ("ui_ux", "UI & usability"),
+        ("engagement", "Learner engagement"),
+        ("technical_performance", "Technical reliability"),
+        ("learning_effectiveness", "Learning effectiveness"),
+      ] %}
+      {% for key, label in metrics %}
+        <label class="rating">
+          <div>
+            <span>{{ label }}</span>
+            <small>Score from 1-5</small>
+          </div>
+          <input type="range" min="1" max="5" value="3" step="1" name="{{ key }}" oninput="this.nextElementSibling.innerText = this.value" />
+          <span class="badge">3</span>
+        </label>
+      {% endfor %}
+    </div>
+
+    <button class="btn primary" type="submit">Generate report</button>
+  </form>
+</section>
+{% endblock %}

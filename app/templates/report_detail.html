@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block body_extra %}
+<script>
+  window.addEventListener("load", () => {
+    const ctx = document.getElementById("scoreChart");
+    if (!ctx) return;
+    const payload = JSON.parse('{{ chart_data | safe }}');
+    new Chart(ctx, {
+      type: "radar",
+      data: {
+        labels: payload.labels,
+        datasets: [
+          {
+            label: "Scores",
+            data: payload.data,
+            backgroundColor: "rgba(75, 107, 253, 0.2)",
+            borderColor: "#4b6bfd",
+            borderWidth: 2,
+            pointBackgroundColor: "#4b6bfd",
+          },
+        ],
+      },
+      options: {
+        scales: {
+          r: {
+            suggestedMin: 0,
+            suggestedMax: 5,
+            ticks: { stepSize: 1 },
+          },
+        },
+      },
+    });
+  });
+</script>
+{% endblock %}
+{% block content %}
+<section class="container report">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Evaluation report</p>
+      <h1>{{ evaluation.app_name }}</h1>
+      <p class="lead">Audience: {{ evaluation.audience or "General" }} · Created {{ evaluation.created_at.strftime('%d %b %Y') }}</p>
+    </div>
+    <div class="score-pill large">Quality Score {{ '%.1f' | format(evaluation.quality_score) }}%</div>
+  </div>
+
+  <div class="grid-2">
+    <article class="card">
+      <h3>Dimension breakdown</h3>
+      <canvas id="scoreChart" width="400" height="300"></canvas>
+    </article>
+    <article class="card">
+      <h3>Insight highlights</h3>
+      <ul class="insight-list">
+        {% for item in insight %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+      <div class="stat-card">
+        <div>
+          <p class="muted">Pedagogy</p>
+          <p class="stat-value">{{ evaluation.pedagogical_design }}/5</p>
+        </div>
+        <div>
+          <p class="muted">UI/UX</p>
+          <p class="stat-value">{{ evaluation.ui_ux }}/5</p>
+        </div>
+        <div>
+          <p class="muted">Engagement</p>
+          <p class="stat-value">{{ evaluation.engagement }}/5</p>
+        </div>
+        <div>
+          <p class="muted">Technical</p>
+          <p class="stat-value">{{ evaluation.technical_performance }}/5</p>
+        </div>
+        <div>
+          <p class="muted">Learning</p>
+          <p class="stat-value">{{ evaluation.learning_effectiveness }}/5</p>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <article class="card">
+    <h3>Context</h3>
+    <p>{{ evaluation.summary or "No summary provided." }}</p>
+  </article>
+</section>
+{% endblock %}

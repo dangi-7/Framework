@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Framework Lab</p>
+      <h1>Upload survey data and generate insights</h1>
+      <p class="lead">The lab mirrors our Python analytics pipeline: it runs descriptive statistics, reliability checks, and light path analysis to validate your framework.</p>
+    </div>
+    <div class="glass-panel mini">
+      <p class="muted">Need a template?</p>
+      <a href="/static/data/real_data_template.csv" class="btn secondary">Download CSV template</a>
+    </div>
+  </div>
+
+  <form class="card form" method="post" action="/framework" enctype="multipart/form-data">
+    <label>
+      <span>Upload learner survey (.csv)</span>
+      <input type="file" name="dataset" accept=".csv" required />
+    </label>
+    <button type="submit" class="btn primary">Run analytics</button>
+    {% if dataset_name %}
+      <p class="muted">Last analysed: {{ dataset_name }}</p>
+    {% endif %}
+    <p class="muted">Need inspiration? <a href="/static/data/synthetic_survey.csv" class="link">Download the synthetic dataset</a>.</p>
+  </form>
+
+  {% if analytics %}
+    <section class="grid-3 mt">
+      <article class="card">
+        <p class="muted">Respondents</p>
+        <p class="stat-value">{{ analytics.summary.total_respondents }}</p>
+        <p class="muted">Imputed columns: {{ analytics.summary.imputed_columns | length }}</p>
+      </article>
+      <article class="card">
+        <p class="muted">Overall mean</p>
+        <p class="stat-value">{{ '%.1f' | format(analytics.summary.overall_mean) }}%</p>
+        <p class="muted">Std Dev {{ '%.1f' | format(analytics.summary.overall_std_dev) }}</p>
+      </article>
+      <article class="card">
+        <p class="muted">Reliability signals</p>
+        <p class="stat-value">{{ analytics.reliability | length }}</p>
+        <p class="muted">Cronbach α across available factors</p>
+      </article>
+    </section>
+
+    <article class="card">
+      <h3>Descriptive statistics</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Mean</th>
+              <th>Std Dev</th>
+              <th>95% CI</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for key, value in analytics.descriptive_stats.items() %}
+              <tr>
+                <td>{{ key.replace('_', ' ') }}</td>
+                <td>{{ '%.1f' | format(value.mean) }}</td>
+                <td>{{ '%.1f' | format(value.std_dev) }}</td>
+                <td>{{ '%.1f' | format(value.ci_low) }} – {{ '%.1f' | format(value.ci_high) }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="card">
+      <h3>Reliability (Cronbach α)</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Factor</th>
+              <th>Alpha</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in analytics.reliability %}
+              <tr>
+                <td>{{ row.factor.replace('_', ' ') }}</td>
+                <td>{{ '%.3f' | format(row.alpha) }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="card">
+      <h3>Insights</h3>
+      <div class="grid-2">
+        <div>
+          <p class="muted">Top strengths</p>
+          <ul class="insight-list">
+            {% for item in analytics.insights.strengths %}
+              <li>{{ item.name }} ({{ '%.1f' | format(item.score) }})</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div>
+          <p class="muted">Improvement areas</p>
+          <ul class="insight-list">
+            {% for item in analytics.insights.improvements %}
+              <li>{{ item.name }} ({{ '%.1f' | format(item.score) }})</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    {% if analytics.scores_preview %}
+      <article class="card">
+        <h3>Score preview (first 5 respondents)</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                {% for key in analytics.scores_preview[0].keys() %}
+                  <th>{{ key.replace('_', ' ') }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in analytics.scores_preview %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  {% for value in row.values() %}
+                    <td>{{ '%.1f' | format(value) }}</td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </article>
+    {% endif %}
+  {% else %}
+    <article class="card">
+      <p>No analytics yet. Upload a CSV to activate the lab.</p>
+    </article>
+  {% endif %}
+</section>
+{% endblock %}
